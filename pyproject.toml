@@ -1,0 +1,27 @@
+[project]
+name = "chatgpt-research"
+version = "0.1.0"
+description = "Tool for analyzing email addresses and generating PromptQL insights using ChatGPT API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.3.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.scripts]
+promptql-analysis = "chatgpt_research.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["chatgpt_research"]
