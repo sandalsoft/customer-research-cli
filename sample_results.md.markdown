@@ -6,54 +6,54 @@
 
 ### Use Cases
 
-#### Market Sentiment Analysis
-Using PromptQL, an investment banker can query the language model to analyze current market sentiment by aggregating insights from financial news, social media, and analyst reports. This can help in making informed decisions about buying, holding, or selling securities.
+#### Market Trend Analysis
+Investment bankers can use PromptQL to query large language models for the latest market trends and analysis. By inputting queries about specific sectors or market conditions, the model can provide insights and summaries from recent reports, news articles, or expert opinions, aiding in making informed investment decisions.
 
-#### Financial Modeling Assistance
-PromptQL can assist investment bankers in building or improving financial models by providing step-by-step guidance, suggesting relevant variables, and offering insights on industry-specific assumptions. This ensures models are robust and based on comprehensive data analysis.
+#### Valuation Model Assistance
+PromptQL can be utilized to help investment bankers refine or develop financial models. They can query the model for explanations on complex valuation techniques, get assistance in building assumptions, or receive suggestions for comparable company analysis, enhancing the accuracy and robustness of their financial models.
 
-#### Mergers and Acquisitions Strategy
-An investment banker can leverage PromptQL to simulate various M&A scenarios, evaluate potential synergies, and forecast financial outcomes. This can aid in developing strategies for negotiations, valuations, and structuring deals to maximize shareholder value.
+#### M&A Target Identification
+Investment bankers can leverage PromptQL to identify potential merger and acquisition targets by querying for companies that meet specific criteria. The model can filter through vast amounts of data to suggest companies with complementary strengths, similar market positions, or strategic fits, streamlining the preliminary stages of deal sourcing.
 
 ### Example Queries
 
-#### Market Trend Analysis
-This query uses natural language processing to extract and summarize key market trends from recent financial news articles.
+#### Real-Time Financial News Insights
+Fetches the latest financial news related to specified companies or sectors, helping investment bankers stay updated with market movements.
 
 ```
-{'input': 'Summarize key market trends from the latest financial news articles focusing on tech stocks.', 'features': ['summarization', 'trend_detection'], 'output_format': 'summary'}
+{'action': 'fetch_news', 'parameters': {'topics': ['technology', 'pharmaceuticals'], 'companies': ['Apple', 'Pfizer'], 'timeframe': 'last 24 hours', 'language': 'English'}, 'output': {'format': 'summary', 'limit': 5}}
 ```
 
-#### Valuation Model Generator
-This query generates a valuation model for a specific company using historical financial data and specific assumptions provided by the user.
+#### Financial Data Analysis
+Analyzes historical stock performance and provides insights based on specified metrics, such as volatility and average return.
 
 ```
-{'input': 'Generate a DCF model for Tesla using a growth rate of 5% and a discount rate of 8%.', 'features': ['financial_modeling', 'custom_parameters'], 'output_format': 'valuation_model'}
+{'action': 'analyze_stock_data', 'parameters': {'symbols': ['AAPL', 'GOOGL'], 'metrics': ['volatility', 'average_return'], 'time_period': '1 year'}, 'output': {'format': 'detailed_report', 'include_charts': True}}
 ```
 
-#### Risk Assessment Report
-This query assesses the risk profile of a potential investment by analyzing various risk factors and providing a comprehensive report.
+#### Risk Assessment Scenario Simulation
+Simulates different economic scenarios to assess risks associated with a portfolio of investments.
 
 ```
-{'input': 'Assess the risk profile of investing in emerging markets, focusing on political and currency risks.', 'features': ['risk_analysis', 'report_generation'], 'output_format': 'detailed_report'}
+{'action': 'simulate_scenarios', 'parameters': {'portfolio': {'stocks': ['TSLA', 'AMZN'], 'bonds': ['US10Y', 'EU5Y']}, 'scenarios': ['interest_rate_hike', 'recession'], 'time_horizon': 'next 6 months'}, 'output': {'format': 'risk_report', 'include_recommendations': True}}
 ```
 
 ### Visualization Ideas
 
-#### Mergers and Acquisitions Heatmap
-A heatmap visualization that displays the frequency and size of mergers and acquisitions within different sectors over a specified time period. This allows investment bankers to quickly identify which industries are experiencing the most activity and where opportunities might exist.
+#### Portfolio Performance Heatmap
+A heatmap that visualizes the performance of various investment portfolios managed by the investment banker. Each cell represents a portfolio, with colors indicating the rate of return over a specific period. This allows the banker to quickly identify high-performing and underperforming portfolios. The use of PromptQL can dynamically update this heatmap with the latest data, providing real-time insights.
 
-**Visualization Type:** heatmap
+**Visualization Type:** Heatmap
 
-#### IPO Performance Dashboard
-An interactive dashboard showcasing the performance of recent IPOs, including metrics such as stock price movement, market capitalization changes, and trading volume. This visualization helps investment bankers assess the success of IPOs and identify trends.
+#### Mergers & Acquisitions Timeline
+An interactive timeline that tracks the stages of ongoing and completed mergers and acquisitions that the investment banker is involved in. Each entry on the timeline shows key details such as deal value, status, and involved parties. PromptQL can be used to fetch and filter data based on specific criteria, such as industry or region, providing tailored views for strategic decision-making.
 
-**Visualization Type:** dashboard
+**Visualization Type:** Interactive Timeline
 
-#### Risk-Return Scatter Plot
-A scatter plot that maps out different investment opportunities by plotting their risk levels against expected returns. Data points can be color-coded by sector, and users can filter based on specific criteria like region or market cap. This visualization assists bankers in making informed investment decisions.
+#### Risk Exposure Network Graph
+A network graph that visualizes the interconnectedness of different financial instruments and entities in the investment banker's portfolio. Nodes represent individual assets or entities, while edges illustrate their relationships and dependencies. The size and color of nodes can reflect risk levels, enabling the banker to assess potential areas of systemic risk. PromptQL queries can dynamically adjust the graph based on real-time data inputs, providing a clear picture of evolving risk scenarios.
 
-**Visualization Type:** scatter_plot
+**Visualization Type:** Network Graph
 
 ---
 

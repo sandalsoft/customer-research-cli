@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, mock_open
 import json
 import os
 from io import StringIO
@@ -11,6 +11,7 @@ from chatgpt_research.promptql_analysis import (
     generate_promptql_insights,
     analyze_emails,
     save_results,
+    load_role_context,
     client
 )
 
@@ -65,6 +66,39 @@ class TestPromptQLAnalysis(unittest.TestCase):
         self.assertIn("datascientist@example.com",
                       kwargs['messages'][1]['content'])
 
+    @patch('os.path.exists')
+    def test_load_role_context(self, mock_exists):
+        # Test successful loading
+        mock_exists.return_value = True
+        context_json = '{"test@example.com": "Data Scientist", "dev@example.com": "Software Developer"}'
+
+        with patch('builtins.open', mock_open(read_data=context_json)):
+            context = load_role_context('fake_path.json')
+            self.assertEqual(len(context), 2)
+            self.assertEqual(context['test@example.com'], 'Data Scientist')
+            self.assertEqual(context['dev@example.com'], 'Software Developer')
+
+        # Test file not found
+        mock_exists.return_value = False
+        with self.assertRaises(FileNotFoundError):
+            load_role_context('nonexistent.json')
+
+        # Test invalid JSON
+        mock_exists.return_value = True
+        with patch('builtins.open', mock_open(read_data='invalid json')):
+            with self.assertRaises(ValueError):
+                load_role_context('invalid.json')
+
+        # Test invalid structure (not a dictionary)
+        with patch('builtins.open', mock_open(read_data='["array", "not", "dict"]')):
+            with self.assertRaises(ValueError):
+                load_role_context('invalid_structure.json')
+
+        # Test invalid values (non-string roles)
+        with patch('builtins.open', mock_open(read_data='{"valid@example.com": "Valid", "invalid@example.com": 123}')):
+            with self.assertRaises(ValueError):
+                load_role_context('invalid_values.json')
+
     @patch('chatgpt_research.promptql_analysis.generate_promptql_insights')
     @patch('chatgpt_research.promptql_analysis.infer_role_from_email')
     def test_analyze_emails(self, mock_infer_role, mock_generate_insights):
@@ -79,10 +113,31 @@ class TestPromptQLAnalysis(unittest.TestCase):
         }
         mock_generate_insights.return_value = mock_insights
 
-        # Test successful analysis
+        # Test successful analysis without context
         results = analyze_emails(["test@example.com"])
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0], mock_insights)
+        mock_infer_role.assert_called_once_with("test@example.com")
+
+        # Reset mocks
+        mock_infer_role.reset_mock()
+        mock_generate_insights.reset_mock()
+
+        # Test with context
+        context = {"test@example.com": "Product Manager",
+                   "other@example.com": "Software Engineer"}
+        results = analyze_emails(
+            ["test@example.com", "other@example.com", "no-context@example.com"], context)
+        self.assertEqual(len(results), 3)
+
+        # Should use context for the first two emails
+        mock_generate_insights.assert_any_call(
+            "test@example.com", "Product Manager")
+        mock_generate_insights.assert_any_call(
+            "other@example.com", "Software Engineer")
+
+        # Should infer role for the third email
+        mock_infer_role.assert_called_once_with("no-context@example.com")
 
         # Test handling of exceptions
         mock_infer_role.side_effect = Exception("Test error")

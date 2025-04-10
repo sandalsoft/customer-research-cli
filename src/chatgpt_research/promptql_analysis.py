@@ -88,8 +88,9 @@ def generate_promptql_insights(email: str, role: str) -> Dict[str, Any]:
     use_cases_response = client.chat.completions.create(
         model=os.getenv("OPENAI_MODEL"),
         messages=[
-            {"role": "system", "content": "You are an expert in PromptQL, a query language for large language models like ChatGPT. Provide specific, practical use cases."},
-            {"role": "user", "content": f"For someone in the role of '{role}', what are 3 specific use cases where PromptQL could be valuable? Respond in JSON format with an array of use case objects, each with 'title' and 'description' fields."}
+            {"role": "system",
+                "content": "You are an expert in PromptQL, an AI tool that provides AI-powered insights from internal company structured data (e.g. databases, and APIs). Provide specific, practical use cases relevant to the role of the user."},
+            {"role": "user", "content": f"For someone in the role of '{role}', what are 3 specific use cases where PromptQL could be valuable to discover insights from internal company structured data? Respond in JSON format with an array of use case objects, each with 'title' and 'description' fields."}
         ],
         temperature=0.7,
         response_format={"type": "json_object"}
@@ -133,12 +134,52 @@ def generate_promptql_insights(email: str, role: str) -> Dict[str, Any]:
     }
 
 
-def analyze_emails(emails: List[str]) -> List[Dict[str, Any]]:
+def load_role_context(context_file_path: str) -> Dict[str, str]:
+    """
+    Load role context from a file.
+
+    Args:
+        context_file_path: Path to the context file
+
+    Returns:
+        Dictionary mapping email addresses to their associated role context
+    """
+    if not os.path.exists(context_file_path):
+        raise FileNotFoundError(f"Context file not found: {context_file_path}")
+
+    logger.info(f"Loading role context from {context_file_path}")
+
+    try:
+        with open(context_file_path, 'r') as f:
+            # Expected format is a JSON file with email:role mapping
+            context = json.load(f)
+
+        # Validate the structure (simple email->role dictionary)
+        if not isinstance(context, dict):
+            raise ValueError(
+                "Context file must contain a JSON object (dictionary)")
+
+        # Check if all values are strings
+        invalid_entries = [email for email,
+                           role in context.items() if not isinstance(role, str)]
+        if invalid_entries:
+            raise ValueError(
+                f"Invalid role entries for emails: {', '.join(invalid_entries)}")
+
+        logger.info(f"Loaded context for {len(context)} email(s)")
+        return context
+    except json.JSONDecodeError:
+        raise ValueError(
+            f"Context file is not valid JSON: {context_file_path}")
+
+
+def analyze_emails(emails: List[str], role_context: Dict[str, str] = None) -> List[Dict[str, Any]]:
     """
     Analyze a list of email addresses and generate PromptQL insights.
 
     Args:
         emails: List of email addresses to analyze
+        role_context: Optional dictionary mapping emails to roles (bypasses inference)
 
     Returns:
         List of dictionaries containing analysis results for each email
@@ -147,7 +188,14 @@ def analyze_emails(emails: List[str]) -> List[Dict[str, Any]]:
 
     for email in emails:
         try:
-            role = infer_role_from_email(email)
+            # If we have a context for this email, use it instead of inference
+            if role_context and email in role_context:
+                role = role_context[email]
+                logger.info(f"Using provided role context for {email}: {role}")
+            else:
+                # Otherwise perform inference
+                role = infer_role_from_email(email)
+
             insights = generate_promptql_insights(email, role)
             results.append(insights)
         except Exception as e:
@@ -215,17 +263,24 @@ def main():
                         "json", "markdown"], default="json", help="Output format (json or markdown)")
     parser.add_argument("--output-file", default="promptql_results",
                         help="Output file name (without extension)")
+    parser.add_argument(
+        "--context-file", help="Path to a JSON file mapping emails to roles, bypassing the inference step")
     args = parser.parse_args()
 
     try:
         load_environment()
+
+        # Load role context if provided
+        role_context = None
+        if args.context_file:
+            role_context = load_role_context(args.context_file)
 
         # Ensure output file has the correct extension
         output_file = args.output_file
         if not output_file.endswith(f".{args.output_format}"):
             output_file = f"{output_file}.{args.output_format}"
 
-        results = analyze_emails(args.emails)
+        results = analyze_emails(args.emails, role_context)
         save_results(results, args.output_format, output_file)
 
         logger.info(

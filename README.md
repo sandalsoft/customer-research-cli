@@ -79,6 +79,21 @@ Specify a custom output file:
 python promptql_analysis.py --emails user1@example.com --output-file my_results
 ```
 
+Use a context file to provide predefined roles instead of inferring them:
+
+```
+python promptql_analysis.py --emails user1@example.com user2@example.com --context-file roles.json
+```
+
+The context file should be a JSON file that maps email addresses to their roles:
+
+```json
+{
+  "user1@example.com": "Data Scientist",
+  "user2@example.com": "Product Manager"
+}
+```
+
 ### Full Options
 
 ```
