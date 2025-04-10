@@ -6,54 +6,54 @@
 
 ### Use Cases
 
-#### Literature Review Automation
-PromptQL can be used to automate the extraction and summarization of key information from vast volumes of scientific literature. By querying large language models, pharmaceutical scientists can quickly gather data on the latest research findings, drug interactions, and clinical trial results, improving efficiency and ensuring they have access to the most current information.
+#### Optimizing Drug Formulation Processes
+PromptQL can analyze data from past drug formulations and trial outcomes to identify patterns and correlations between formulation parameters and drug efficacy or stability. This helps pharmaceutical scientists optimize the formulation process by highlighting the most effective ingredient combinations and process conditions, reducing the time and cost of development.
 
-#### Drug Interaction Prediction
-Utilize PromptQL to query large language models for predicting potential drug interactions. By inputting specific chemical compounds and existing medications, scientists can use the model's vast database of known interactions to identify possible adverse effects, thus aiding in the development of safer pharmaceutical products.
+#### Predictive Analysis of Compound Efficacy
+Utilize PromptQL to evaluate datasets from preclinical and clinical trials to predict the efficacy of new compounds. By identifying trends and similarities with previous successful compounds, scientists can focus their efforts on the most promising candidates, improving the success rate of drug development and ensuring resources are allocated efficiently.
 
-#### Formulation Development Support
-PromptQL can assist in formulation development by querying for optimal ingredient combinations and proportions based on desired therapeutic outcomes. This can include querying the model for insights on solubility, bioavailability, and stability of formulations, assisting scientists in designing more efficient drug delivery systems.
+#### Streamlining Regulatory Compliance
+PromptQL can analyze regulatory documentation and compliance data to ensure that new drug developments meet all necessary regulatory requirements. By cross-referencing internal data with regulatory standards, PromptQL can highlight potential compliance issues early in the development process, reducing the risk of delays and ensuring a smoother path to market.
 
 ### Example Queries
 
-#### Compound Interaction Analysis
-This query helps pharmaceutical scientists analyze interactions between two chemical compounds. It utilizes the data retrieval feature to gather information from multiple scientific databases.
+#### Chemical Compound Interaction Analysis
+This query helps a pharmaceutical scientist understand the interactions between two specific chemical compounds, which is crucial for drug formulation.
 
 ```
-SELECT interaction_details FROM chemical_database WHERE compound_A = 'aspirin' AND compound_B = 'ibuprofen';
+{'select': 'interaction_effects', 'from': 'chemical_compounds_database', 'where': {'compound_1': 'Aspirin', 'compound_2': 'Ibuprofen'}, 'output': 'summary'}
 ```
 
-#### Automated Literature Review
-This query allows the scientist to perform an automated literature review on recent advancements in drug delivery systems, using the natural language understanding feature to summarize key findings.
+#### Latest Research on Target Protein
+This query retrieves the most recent research articles related to a specific protein target, aiding in drug discovery and development.
 
 ```
-SUMMARIZE LITERATURE topic = 'drug delivery systems' FROM publications WHERE date >= '2023-01-01';
+{'select': 'research_articles', 'from': 'scientific_journals', 'where': {'protein_target': 'PD-L1'}, 'order_by': 'publication_date DESC', 'limit': 5}
 ```
 
-#### Predictive Modeling for Drug Efficacy
-This query leverages machine learning capabilities to predict the efficacy of a new drug formulation based on historical data. It uses predictive analytics to provide insights into potential outcomes.
+#### Adverse Effects Prediction for New Drug
+This query uses predictive modeling to estimate potential adverse effects of a new drug in early development stages.
 
 ```
-PREDICT efficacy FOR new_drug_formulation USING historical_data WHERE factors = ('dosage', 'patient_age', 'administration_method');
+{'predict': 'adverse_effects', 'using_model': 'toxicology_predictor', 'with_inputs': {'drug_composition': 'new_drug_formula', 'dosage_levels': [10, 20, 50]}, 'output': 'probability_distribution'}
 ```
 
 ### Visualization Ideas
 
-#### Drug Discovery Pathways
-This visualization maps out potential drug discovery pathways, showcasing the steps from target identification to lead optimization. It highlights where PromptQL queries can streamline processes by providing quick access to relevant data and insights, such as gene expression data or compound activity.
+#### Drug Interaction Network Graph
+A visualization that maps out the interactions between various compounds and their effects, helping to identify potential drug candidates and side effects. This network graph will use nodes to represent compounds and edges to represent interactions, with varying thickness to indicate interaction strength.
 
-**Visualization Type:** Sankey Diagram
+**Visualization Type:** network_graph
 
-#### Clinical Trial Data Insights
-This dashboard presents a comprehensive overview of clinical trial results, including patient demographics, treatment efficacy, and adverse events. By utilizing PromptQL, scientists can dynamically filter and query specific datasets, enabling a more nuanced analysis of trial outcomes and facilitating data-driven decision-making.
+#### Compound Efficacy Heatmap
+A heatmap that displays the efficacy of different compounds across various biological targets. Rows represent different compounds, while columns represent biological targets. Color intensity indicates the level of efficacy, allowing scientists to quickly identify promising candidates for further development.
 
-**Visualization Type:** Interactive Dashboard
+**Visualization Type:** heatmap
 
-#### Compound-Target Interaction Network
-This network graph visualizes the interactions between various compounds and their biological targets. It allows pharmaceutical scientists to explore the relationships and potential off-target effects of compounds, with PromptQL queries enabling real-time data retrieval and hypothesis testing.
+#### Time-Series Analysis of Clinical Trial Outcomes
+A line chart that plots the progression of clinical trial outcomes over time for various compounds. This visual allows pharmaceutical scientists to track trends, observe anomalies, and assess the long-term potential of their drugs. Each line will represent a different compound, with markers indicating significant events or milestones in the trial process.
 
-**Visualization Type:** Network Graph
+**Visualization Type:** line_chart
 
 ---
 
